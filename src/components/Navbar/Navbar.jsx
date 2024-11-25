@@ -7,6 +7,7 @@ import profile_img from '../../assets/profile_img.png'
 import caret_icon from '../../assets/caret_icon.svg'
 import { logout } from '../../firebase'
 
+
 const Navbar = () => {
 
   const navRef = useRef();

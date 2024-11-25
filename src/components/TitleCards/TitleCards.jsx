@@ -16,18 +16,17 @@ const TitleCards = ({ title, collectionName, category }) => {
       if (collectionName) {
         // Buscar de uma única coleção
         const collectionRef = collection(db, collectionName);
-
         // Aplicar filtro por categoria, se necessário
         const q = category ? query(collectionRef, where('category', '==', category)) : collectionRef;
         const snapshot = await getDocs(q);
-
         combinedData = snapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data(),
+          collection: collectionName, // Adiciona a coleção manualmente
         }));
       } else if (category) {
         // Buscar de múltiplas coleções se apenas categoria for especificada
-        const collections = ['Courses', 'Lessons', 'Texts'];
+        const collections = ['Courses', 'Lessons', 'Articles'];
         for (const col of collections) {
           const collectionRef = collection(db, col);
           const q = query(collectionRef, where('category', '==', category));
@@ -56,30 +55,36 @@ const TitleCards = ({ title, collectionName, category }) => {
   useEffect(() => {
     fetchData();
     cardsRef.current.addEventListener('wheel', handleWheel);
+    return () => {
+      cardsRef.current?.removeEventListener('wheel', handleWheel);
+    };
   }, []); // Dependências ajustadas
+
+  const getLinkPath = (collection, id) => {
+    const paths = {
+      Lessons: `/player/${id}`,
+      Articles: `/article/${id}`,
+      Courses: `/article/${id}`,
+    };
+    return paths[collection] || `/`;
+  };
 
   return (
     <div className='title-cards'>
       <h2>{title || "Popular on iSYE"}</h2>
       <div className="card-list" ref={cardsRef}>
-        {data.map((item) => (
+        {data.map(({ id, collection, coverImage, name }) => (
           <Link
-            to={
-              item.collection === "Lessons" ? `/player/${item.id}` :
-                item.collection === "Articles" ? `/article/${item.id}` :
-                item.collection === "Courses" ? `/article/${item.id}` :
-                  `/`
-            }
+            to={getLinkPath(collection, id)}
             className="card"
-            key={item.id}
+            key={`${collection}-${id}`} // Garante uma chave única
           >
             <img
-              src={item.coverImage || 'https://ih1.redbubble.net/image.4905811447.8675/flat,750x,075,f-pad,750x1000,f8f8f8.jpg'}
-              alt={item.name}
+              src={coverImage || 'https://ih1.redbubble.net/image.4905811447.8675/flat,750x,075,f-pad,750x1000,f8f8f8.jpg'}
+              alt={name}
             />
-            <p>{item.name}</p>
+            <p>{name}</p>
           </Link>
-
         ))}
       </div>
     </div>
