@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import './Home.css';
 import { useNavigate } from 'react-router-dom'; // Para navegação
 import Navbar from '../../components/Navbar/Navbar';
@@ -12,6 +12,21 @@ import Footer from '../../components/Footer/Footer';
 const Home = () => {
   const navigate = useNavigate(); // Hook para navegação
 
+  // Referências para as seções
+  const homeRef = useRef();
+  const coursesRef = useRef();
+  const lessonsRef = useRef();
+  const articlesRef = useRef();
+  const othersRef = useRef();
+
+  const sectionRefs = {
+    home: homeRef,
+    courses: coursesRef,
+    lessons: lessonsRef,
+    articles: articlesRef,
+    others: othersRef,
+  };
+
   const handlePlayClick = () => {
     navigate('/player/lesson1'); // Navega para Lesson 1
   };
@@ -22,8 +37,8 @@ const Home = () => {
 
   return (
     <div className='home'>
-      <Navbar />
-      <div className="yogi">
+      <Navbar sectionRefs={sectionRefs} />
+      <div ref={homeRef} className="yogi">
         <img src={yogi_banner} alt="" className='banner-img' />
         <div className="yogi-caption">
           <img src={yogi_title} alt="" className='caption-img' />
@@ -42,16 +57,21 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <div className="more-cards">
-        {/* Uma linha para cada tipo de conteúdo */}
+      <div ref={coursesRef} className="more-cards">
         <TitleCards title="Courses" collectionName="Courses" />
+      </div>
+      <div ref={lessonsRef} className="more-cards">
         <TitleCards title="Lessons" collectionName="Lessons" />
+      </div>
+      <div ref={articlesRef} className="more-cards">
         <TitleCards title="Articles" collectionName="Articles" />
-        
-        {/* Uma linha para conteúdos da mesma categoria */}
+      </div>
+
+      <div ref={othersRef} className="more-cards">
         <TitleCards title="Beginner" category="Beginner" />
         <TitleCards title="Kriya Yoga" category="kriya" />
       </div>
+
 
       <Footer />
     </div>
