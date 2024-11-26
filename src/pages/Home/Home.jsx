@@ -1,5 +1,6 @@
 import React from 'react';
 import './Home.css';
+import { useNavigate } from 'react-router-dom'; // Para navegação
 import Navbar from '../../components/Navbar/Navbar';
 import yogi_banner from '../../assets/hero_banner.jpg';
 import yogi_title from '../../assets/hero_title.png';
@@ -9,6 +10,16 @@ import TitleCards from '../../components/TitleCards/TitleCards';
 import Footer from '../../components/Footer/Footer';
 
 const Home = () => {
+  const navigate = useNavigate(); // Hook para navegação
+
+  const handlePlayClick = () => {
+    navigate('/player/lesson1'); // Navega para Lesson 1
+  };
+
+  const handleMoreInfoClick = () => {
+    navigate('/course/course1'); // Navega para Course 1
+  };
+
   return (
     <div className='home'>
       <Navbar />
@@ -17,12 +28,17 @@ const Home = () => {
         <div className="yogi-caption">
           <img src={yogi_title} alt="" className='caption-img' />
           <p>
-            Discovering his ties to a secret ancient order, a young man living in modern Istanbul
-            embarks on a quest to save the city from an immortal enemy
+            Yoga is an ancient Hindu tradition that harmonizes the mind, body, and spirit. 
+            It blends physical postures, breath control, and meditation to promote inner 
+            balance and self-awareness.
           </p>
           <div className="yogi-btns">
-            <button className='btn'><img src={play_icon} alt="" />Play</button>
-            <button className='btn dark-btn'><img src={info_icon} alt="" />More Info</button>
+            <button className='btn' onClick={handlePlayClick}>
+              <img src={play_icon} alt="" /> Play
+            </button>
+            <button className='btn dark-btn' onClick={handleMoreInfoClick}>
+              <img src={info_icon} alt="" /> More Info
+            </button>
           </div>
         </div>
       </div>

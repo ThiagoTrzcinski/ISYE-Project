@@ -10,37 +10,69 @@ const Course = () => {
   const navigate = useNavigate(); // Navegação para o botão de voltar
 
   const [course, setCourse] = useState(null); // Dados do curso
+  const [lessons, setLessons] = useState([]); // Lista de lições
   const [error, setError] = useState(null); // Mensagens de erro
   const [loading, setLoading] = useState(true); // Estado de carregamento
 
-  useEffect(() => {
-    if (!courseId) {
-      setError("No course ID provided.");
-      setLoading(false);
-      return;
-    }
+  // Função para buscar os dados do curso
+  const fetchCourse = async () => {
+    try {
+      const coursesRef = collection(db, "Courses");
+      const q = query(coursesRef, where("id", "==", courseId));
+      const querySnapshot = await getDocs(q);
 
-    const fetchCourse = async () => {
-      try {
-        const coursesRef = collection(db, "Courses");
-        const q = query(coursesRef, where("id", "==", courseId));
-        const querySnapshot = await getDocs(q);
-
-        if (!querySnapshot.empty) {
-          const courseData = querySnapshot.docs[0].data();
-          setCourse(courseData);
-        } else {
-          setError("Course not found.");
-        }
-      } catch (error) {
-        console.error("Error fetching course:", error);
-        setError("Failed to load course.");
-      } finally {
-        setLoading(false);
+      if (!querySnapshot.empty) {
+        const courseData = querySnapshot.docs[0].data();
+        setCourse(courseData);
+        return courseData.lessons || []; // Retorna os IDs das lições
+      } else {
+        setError("Course not found.");
+        return [];
       }
+    } catch (error) {
+      console.error("Error fetching course:", error);
+      setError("Failed to load course.");
+      return [];
+    }
+  };
+
+  // Função para buscar as lições pelo ID
+  const fetchLessons = async (lessonIds) => {
+    try {
+      const lessonsRef = collection(db, "Lessons");
+      const fetchedLessons = await Promise.all(
+        lessonIds.map(async (lessonId) => {
+          const q = query(lessonsRef, where("id", "==", lessonId));
+          const querySnapshot = await getDocs(q);
+
+          if (!querySnapshot.empty) {
+            return querySnapshot.docs[0].data();
+          } else {
+            console.warn(`Lesson ${lessonId} not found.`);
+            return null;
+          }
+        })
+      );
+
+      // Filtrar lições válidas
+      setLessons(fetchedLessons.filter((lesson) => lesson !== null));
+    } catch (err) {
+      console.error("Error fetching lessons:", err);
+      setError("Failed to load lessons.");
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      const lessonIds = await fetchCourse();
+      if (lessonIds.length > 0) {
+        await fetchLessons(lessonIds);
+      }
+      setLoading(false);
     };
 
-    fetchCourse();
+    fetchData();
   }, [courseId]);
 
   if (loading) {
@@ -69,13 +101,13 @@ const Course = () => {
       </div>
       <h1 className="course-title">{course.name}</h1>
       <ul className="lesson-list">
-        {course.lessons.map((lessonId, index) => (
+        {lessons.map((lesson, index) => (
           <li
-            key={index}
+            key={lesson.id}
             className="lesson-item"
-            onClick={() => navigateToLesson(lessonId)}
+            onClick={() => navigateToLesson(lesson.id)}
           >
-            Lesson {index + 1}
+            <strong>Lesson {index + 1}:</strong> {lesson.name}
           </li>
         ))}
       </ul>
