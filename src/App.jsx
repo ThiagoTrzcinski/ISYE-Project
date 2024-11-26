@@ -8,6 +8,7 @@ import { auth, setupCollections } from './firebase';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Article from './pages/Article/Article';
+import Course from './pages/Course/Course';
 
 const App = () => {
   const navigate = useNavigate();
@@ -19,13 +20,13 @@ const App = () => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         console.log("Logged In");
-        //navigate('/');
+        navigate('/');
       } else {
         console.log("Logged Out");
-        //navigate('/login');
+        navigate('/login');
       }
     });
-  }, [navigate]);
+  }, []);
 
   return (
     <div>
@@ -35,6 +36,7 @@ const App = () => {
         <Route path='/login' element={<Login />} />
         <Route path='/player/:id' element={<Player />} />
         <Route path='/article/:id' element={<Article />} />
+        <Route path='/course/:id' element={<Course/>}/>
       </Routes>
     </div>
   );

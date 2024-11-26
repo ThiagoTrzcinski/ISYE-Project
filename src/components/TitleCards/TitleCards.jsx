@@ -64,7 +64,7 @@ const TitleCards = ({ title, collectionName, category }) => {
     const paths = {
       Lessons: `/player/${id}`,
       Articles: `/article/${id}`,
-      Courses: `/article/${id}`,
+      Courses: `/course/${id}`,
     };
     return paths[collection] || `/`;
   };

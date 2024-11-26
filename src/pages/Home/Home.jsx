@@ -33,7 +33,8 @@ const Home = () => {
         <TitleCards title="Articles" collectionName="Articles" />
         
         {/* Uma linha para conteúdos da mesma categoria */}
-        <TitleCards title="Beginner" category="kriya" />
+        <TitleCards title="Beginner" category="Beginner" />
+        <TitleCards title="Kriya Yoga" category="kriya" />
       </div>
 
       <Footer />
