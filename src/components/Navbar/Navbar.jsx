@@ -28,16 +28,14 @@ const Navbar = () => {
         <img src={logo} alt="Logo" />
         <ul>
           <li>Home</li>
-          <li>TV Shows</li>
-          <li>Movies</li>
-          <li>New & Popular</li>
-          <li>My List</li>
-          <li>Browse by Languages</li>
+          <li>Coursers</li>
+          <li>Lessons</li>
+          <li>Articles</li>
+          <li>Other</li>
         </ul>
       </div>
       <div className="navbar-right">
         <img src={search_icon} alt="" className='icons'/>
-        <p>Children</p>
         <img src={bell_icon} alt="" className='icons'/>
         <div className="navbar-profile">
         <img src={profile_img} alt="" className='profile'/>

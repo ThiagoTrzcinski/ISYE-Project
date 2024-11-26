@@ -13,7 +13,7 @@
 .navbar-left{
     display: flex;
     align-items: center;
-    gap: 50px;
+    gap: 35px;
 }
 
 .navbar-left img{
@@ -42,8 +42,7 @@
 }
 
 .navbar-right .profile{
-    border-radius: 4px;
-    width: 35px;
+    width: 40px;
 }
 
 .navbar-profile{

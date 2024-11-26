@@ -83,7 +83,7 @@ const TitleCards = ({ title, collectionName, category }) => {
               src={coverImage || 'https://ih1.redbubble.net/image.4905811447.8675/flat,750x,075,f-pad,750x1000,f8f8f8.jpg'}
               alt={name}
             />
-            <p>{name}</p>
+            <p><span>{name}</span></p>
           </Link>
         ))}
       </div>
